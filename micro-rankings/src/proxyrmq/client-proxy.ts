@@ -19,24 +19,4 @@ export class ClientProxySmartRanking {
       },
     });
   }
-
-  getClientProxyDesafiosInstance(): ClientProxy {
-    return ClientProxyFactory.create({
-      transport: Transport.RMQ,
-      options: {
-        urls: [this.configService.get('RABBITMQ_URL')],
-        queue: this.configService.get('RABBITMQ_QUEUE_DESAFIOS'),
-      },
-    });
-  }
-
-  getClientProxyRankingsInstance(): ClientProxy {
-    return ClientProxyFactory.create({
-      transport: Transport.RMQ,
-      options: {
-        urls: [this.configService.get('RABBITMQ_URL')],
-        queue: this.configService.get('RABBITMQ_QUEUE_RANKINGS'),
-      },
-    });
-  }
 }

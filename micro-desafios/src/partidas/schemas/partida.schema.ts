@@ -10,13 +10,13 @@ export type PartidaDocument = HydratedDocument<Partida>;
 
 @Schema({ collection: 'partidas', timestamps: true })
 export class Partida {
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId }] })
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
   desafio: DesafioDocument;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId }] })
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
   def: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId }] })
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
   categoria: string;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId /*ref: 'Jogador'*/ }] })
