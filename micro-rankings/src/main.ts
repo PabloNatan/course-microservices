@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
+import * as momentTimezone from 'moment-timezone';
+
 const configService = new ConfigService();
 
 async function bootstrap() {
@@ -17,6 +19,12 @@ async function bootstrap() {
       },
     },
   );
+
+  Date.prototype.toJSON = function (): any {
+    return momentTimezone(this)
+      .tz('America/Sao_Paulo')
+      .format('YYYY-MM-DD HH:mm:ss.SSS');
+  };
 
   await app.listen();
 }

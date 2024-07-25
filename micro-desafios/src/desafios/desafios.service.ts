@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { PartidaDocument } from 'src/partidas/schemas/partida.schema';
 import { DesafioStatus } from './schemas/desafio-status.enum';
 import { Desafio, DesafioDocument } from './schemas/desafios.schema';
+import * as momentTimezone from 'moment-timezone';
 
 @Injectable()
 export class DesafiosService {
@@ -53,6 +54,48 @@ export class DesafiosService {
       return await this.desafioModel
         .findOne({ _id })
         .populate('partida')
+        .exec();
+    } catch (error) {
+      this.logger.error(`error: ${JSON.stringify(error.message)}`);
+      throw new RpcException(error.message);
+    }
+  }
+
+  async consultarDesafiosRealizados(idCategoria: string): Promise<Desafio[]> {
+    try {
+      return this.desafioModel
+        .find()
+        .where('categoria')
+        .equals(idCategoria)
+        .where('status')
+        .equals(DesafioStatus.REALIZADO)
+        .exec();
+    } catch (error) {
+      this.logger.error(`error: ${JSON.stringify(error.message)}`);
+      throw new RpcException(error.message);
+    }
+  }
+
+  async consultarDesafiosRealizadosPelaData(
+    idCategoria: string,
+    dataRef: string,
+  ): Promise<Desafio[]> {
+    try {
+      const dataRefNew = `${dataRef} 23:59:59.999`;
+      return this.desafioModel
+        .find({
+          dataHoraDesafio: {
+            $lte: momentTimezone(dataRefNew)
+              .tz('UTC')
+              .set('hour', 23)
+              .format('YYYY-MM-DD HH:mm:ss.SSS+00:00'),
+          },
+        })
+        .where('categoria')
+        .equals(idCategoria)
+        .where('status')
+        .equals(DesafioStatus.REALIZADO)
+
         .exec();
     } catch (error) {
       this.logger.error(`error: ${JSON.stringify(error.message)}`);
